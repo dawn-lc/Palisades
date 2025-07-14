@@ -9,21 +9,11 @@ namespace Palisades.Model
 {
     [XmlInclude(typeof(LnkShortcut))]
     [XmlInclude(typeof(UrlShortcut))]
-    public abstract class Shortcut
+    public abstract class Shortcut(string name, string iconPath, string uriOrFileAction)
     {
-        private string name;
-        private string iconPath;
-        private string uriOrFileAction;
-
         public Shortcut() : this("", "", "")
         {
 
-        }
-        public Shortcut(string name, string iconPath, string uriOrFileAction)
-        {
-            this.name = name;
-            this.iconPath = iconPath;
-            this.uriOrFileAction = uriOrFileAction;
         }
 
         public string Name { get { return name; } set { name = value; } }
@@ -31,7 +21,6 @@ namespace Palisades.Model
         public string IconPath { get { return iconPath; } set { iconPath = value; } }
         public string UriOrFileAction { get { return uriOrFileAction; } set { uriOrFileAction = value; } }
 
-        /// FIXME: Would be cool to move it out the model.
 
         public static string GetName(string filename)
         {
@@ -40,8 +29,7 @@ namespace Palisades.Model
 
         public static string GetIcon(string filename, string palisadeIdentifier)
         {
-            using Bitmap icon = IconExtractor.GetFileImageFromPath(filename, Helpers.Native.IconSizeEnum.LargeIcon48);
-
+            using Bitmap? icon = IconExtractor.GetFileImageFromPath(filename, Helpers.Native.IconSizeEnum.LargeIcon48) ?? throw new InvalidOperationException("Could not extract icon from file: " + filename);
             string iconDir = PDirectory.GetPalisadeIconsDirectory(palisadeIdentifier);
             PDirectory.EnsureExists(iconDir);
 

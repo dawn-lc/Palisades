@@ -7,7 +7,7 @@ using System.Windows.Interop;
 
 namespace Palisades.Helpers
 {
-    internal class WindowSinker
+    internal partial class WindowSinker : IDisposable
     {
         #region Windows API
         private const int WM_WINDOWPOSCHANGING = 0x0046;
@@ -77,8 +77,7 @@ namespace Palisades.Helpers
 
         private void OnWindowLoaded(object? sender, RoutedEventArgs? e)
         {
-            SetWindowPos(new WindowInteropHelper(window).Handle, HWND_BOTTOM, 0, 0, 0, 0,
-                SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE);
+            SetWindowPos(new WindowInteropHelper(window).Handle, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE);
 
             var source = HwndSource.FromHwnd(new WindowInteropHelper(window).Handle);
             source?.AddHook(WndProc);
@@ -123,7 +122,7 @@ namespace Palisades.Helpers
             return (WindowSinker)d.GetValue(SinkerProperty);
         }
 
-        private static void SetSinker(DependencyObject d, WindowSinker value)
+        private static void SetSinker(DependencyObject d, WindowSinker? value)
         {
             d.SetValue(SinkerProperty, value);
         }

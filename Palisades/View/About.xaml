@@ -1,0 +1,53 @@
+﻿<Window x:Class="Palisades.View.About"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModel="clr-namespace:Palisades.ViewModel"
+        mc:Ignorable="d"
+        Title="{Binding AboutTitle, Mode=OneWay}"
+        Height="450" Width="800"
+        WindowStyle="ToolWindow"
+        ResizeMode="NoResize">
+    <Window.DataContext>
+        <viewModel:AboutViewModel />
+    </Window.DataContext>
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0">
+            <TextBlock Text="{Binding AboutTitle}" FontSize="20" FontWeight="Bold"/>
+            <TextBlock Text="{Binding Version}" Margin="0,5,0,0"/>
+            <TextBlock Text="{Binding ReleaseDate}"/>
+            <TextBlock Margin="0,20,0,0">
+                <Run Text="{Binding AboutMaintainedBy, Mode=OneWay}"/>
+                <Hyperlink Command="{Binding NavigateCommand}" CommandParameter="https://github.com/Xstoudi">@Xstoudi</Hyperlink>
+                <Run Text="{Binding AboutLicenseInfo, Mode=OneWay}"/>
+                <Hyperlink Command="{Binding NavigateCommand}" CommandParameter="https://github.com/Xstoudi/Palisades">
+                    <Run Text="{Binding AboutGithubRepo, Mode=OneWay}"/>
+                </Hyperlink>
+            </TextBlock>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Margin="0,20,0,0">
+            <TextBlock Text="{Binding AboutCredits}" FontSize="16" FontWeight="Bold"/>
+            <TextBlock Text="{Binding AboutLibrariesIntro}" Margin="0,5,0,5"/>
+            <ItemsControl ItemsSource="{Binding Credits}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Margin="20,2,0,2">
+                            <Hyperlink Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                       CommandParameter="{Binding Url}">
+                                <Run Text="{Binding Name}"/>
+                            </Hyperlink>
+                            <Run Text=" - "/>
+                            <Run Text="{Binding Description}"/>
+                        </TextBlock>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </Grid>
+</Window>

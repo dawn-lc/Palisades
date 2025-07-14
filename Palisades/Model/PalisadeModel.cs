@@ -30,7 +30,7 @@ namespace Palisades.Model
             labelsColor = Color.FromArgb(255, 255, 255, 255);
             width = 800;
             height = 450;
-            shortcuts = new();
+            shortcuts = [];
         }
 
         public string Identifier { get { return identifier; } set { identifier = value; } }

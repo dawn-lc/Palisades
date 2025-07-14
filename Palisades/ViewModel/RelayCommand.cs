@@ -3,10 +3,14 @@ using System.Windows.Input;
 
 namespace Palisades.ViewModel
 {
-    public class RelayCommand : ICommand
+    /// <summary>
+    /// Creates a new command.
+    /// </summary>
+    /// <param name="execute">The execution logic.</param>
+    /// <param name="canExecute">The execution status logic.</param>
+    public partial class RelayCommand(Action execute, Func<bool>? canExecute) : ICommand
     {
-        private readonly Action _execute;
-        private readonly Func<bool>? _canExecute;
+        private readonly Action _execute = execute ?? throw new ArgumentNullException(nameof(execute));
 
         /// <summary>
         /// Raised when RaiseCanExecuteChanged is called.
@@ -23,17 +27,6 @@ namespace Palisades.ViewModel
         }
 
         /// <summary>
-        /// Creates a new command.
-        /// </summary>
-        /// <param name="execute">The execution logic.</param>
-        /// <param name="canExecute">The execution status logic.</param>
-        public RelayCommand(Action execute, Func<bool>? canExecute)
-        {
-            _execute = execute ?? throw new ArgumentNullException(nameof(execute));
-            _canExecute = canExecute;
-        }
-
-        /// <summary>
         /// Determines whether this <see cref="RelayCommand"/> can execute in its current state.
         /// </summary>
         /// <param name="parameter">
@@ -43,7 +36,7 @@ namespace Palisades.ViewModel
         /// <returns>true if this command can be executed; otherwise, false.</returns>
         public bool CanExecute(object? parameter)
         {
-            return _canExecute == null || _canExecute();
+            return canExecute == null || canExecute();
         }
 
         /// <summary>
@@ -69,10 +62,14 @@ namespace Palisades.ViewModel
         }
     }
 
-    public class RelayCommand<T> : ICommand
+    /// <summary>
+    /// Creates a new command.
+    /// </summary>
+    /// <param name="execute">The execution logic.</param>
+    /// <param name="canExecute">The execution status logic.</param>
+    public partial class RelayCommand<T>(Action<T> execute, Func<bool>? canExecute) : ICommand
     {
-        private readonly Action<T> _execute;
-        private readonly Func<bool>? _canExecute;
+        private readonly Action<T> _execute = execute ?? throw new ArgumentNullException(nameof(execute));
 
         /// <summary>
         /// Raised when RaiseCanExecuteChanged is called.
@@ -89,17 +86,6 @@ namespace Palisades.ViewModel
         }
 
         /// <summary>
-        /// Creates a new command.
-        /// </summary>
-        /// <param name="execute">The execution logic.</param>
-        /// <param name="canExecute">The execution status logic.</param>
-        public RelayCommand(Action<T> execute, Func<bool>? canExecute)
-        {
-            _execute = execute ?? throw new ArgumentNullException(nameof(execute));
-            _canExecute = canExecute;
-        }
-
-        /// <summary>
         /// Determines whether this <see cref="RelayCommand"/> can execute in its current state.
         /// </summary>
         /// <param name="parameter">
@@ -109,7 +95,7 @@ namespace Palisades.ViewModel
         /// <returns>true if this command can be executed; otherwise, false.</returns>
         public bool CanExecute(object? parameter)
         {
-            return _canExecute == null || _canExecute();
+            return canExecute == null || canExecute();
         }
 
         /// <summary>
@@ -121,6 +107,10 @@ namespace Palisades.ViewModel
         /// </param>
         public void Execute(object? parameter)
         {
+            if (parameter is not T)
+            {
+                throw new ArgumentException($"Parameter must be of type {typeof(T).Name}", nameof(parameter));
+            }
             _execute((T)parameter);
         }
 

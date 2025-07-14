@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Palisades": {
+      "commandName": "Project",
+      "hotReloadEnabled": false
+    }
+  }
+}

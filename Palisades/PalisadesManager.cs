@@ -10,14 +10,14 @@ namespace Palisades
 {
     internal static class PalisadesManager
     {
-        public static readonly Dictionary<string, Palisade> palisades = new();
+        public static readonly Dictionary<string, Palisade> palisades = [];
 
         public static void LoadPalisades()
         {
             string saveDirectory = PDirectory.GetPalisadesDirectory();
             PDirectory.EnsureExists(saveDirectory);
 
-            List<PalisadeModel> loadedModels = new();
+            List<PalisadeModel> loadedModels = [];
 
             foreach (string identifierDirname in Directory.GetDirectories(saveDirectory))
             {

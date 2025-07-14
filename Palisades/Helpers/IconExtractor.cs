@@ -2,6 +2,7 @@
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.Marshalling;
 
 namespace Palisades.Helpers
 {
@@ -41,7 +42,7 @@ namespace Palisades.Helpers
             return GetIconHandleFromFilePathWithFlags(folderpath, iconsize, ref shinfo, FILE_ATTRIBUTE_DIRECTORY, flags);
         }
 
-        internal static System.Drawing.Bitmap? GetBitmapFromIconHandle(IntPtr hIcon)
+        internal static Bitmap? GetBitmapFromIconHandle(IntPtr hIcon)
         {
             if (hIcon == IntPtr.Zero)
             {
@@ -56,7 +57,7 @@ namespace Palisades.Helpers
 
             Bitmap bitmap = myIcon.ToBitmap();
             myIcon.Dispose();
-            Bindings.DestroyIcon(hIcon);
+            _ = Bindings.DestroyIcon(hIcon);
             Bindings.SendMessage(hIcon, CONSTS.WM_CLOSE, 0, 0);
             return bitmap;
         }
@@ -70,9 +71,11 @@ namespace Palisades.Helpers
             int iconIndex = shinfo.iIcon;
             Guid iImageListGuid = new("46EB5926-582E-4017-9FDF-E8998DAA0950");
             IImageList? iml = null;
-#pragma warning disable CS8601
-            Bindings.SHGetImageList((int)iconsize, ref iImageListGuid, ref iml);
-#pragma warning restore CS8601
+            _ = Bindings.SHGetImageList((int)iconsize, ref iImageListGuid, ref iml);
+            if (iml == null)
+            {
+                throw new InvalidOperationException("Could not retrieve the image list interface.");
+            }
             IntPtr hIcon = IntPtr.Zero;
             iml.GetIcon(iconIndex, ILD_TRANSPARENT, ref hIcon);
             return hIcon;
@@ -88,10 +91,10 @@ namespace Palisades.Helpers
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        internal struct POINT
+        internal readonly struct POINT
         {
-            private int x;
-            private int y;
+            private readonly int x;
+            private readonly int y;
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -125,10 +128,10 @@ namespace Palisades.Helpers
             public int Unused2;
             public RECT rcImage;
         }
-        [ComImportAttribute()]
+        [GeneratedComInterface]
         [GuidAttribute("46EB5926-582E-4017-9FDF-E8998DAA0950")]
         [InterfaceTypeAttribute(ComInterfaceType.InterfaceIsIUnknown)]
-        internal interface IImageList
+        internal partial interface IImageList
         {
             [PreserveSig]
             int Add(
@@ -321,14 +324,13 @@ namespace Palisades.Helpers
             internal static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, nuint wParam, nint lParam);
 
             [DllImport("shell32.dll", EntryPoint = "#727")]
-            internal extern static int SHGetImageList(int iImageList, ref Guid riid, ref IImageList ppv);
+            internal extern static int SHGetImageList(int iImageList, ref Guid riid, ref IImageList? ppv);
 
-            [DllImport("shell32.dll", CharSet = CharSet.Auto)]
+            [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
             public static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, uint cbFileInfo, uint uFlags);
 
             [DllImport("user32")]
-            internal static extern int DestroyIcon(
-                IntPtr hIcon);
+            internal static extern int DestroyIcon(IntPtr hIcon);
         }
     }
 }

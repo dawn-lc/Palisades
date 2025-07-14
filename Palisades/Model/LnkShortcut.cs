@@ -15,8 +15,8 @@
             IWshRuntimeLibrary.WshShell shell = new();
             IWshRuntimeLibrary.IWshShortcut link = shell.CreateShortcut(shortcut);
 
-            string name = Shortcut.GetName(shortcut);
-            string iconPath = Shortcut.GetIcon(shortcut, palisadeIdentifier);
+            string name = GetName(shortcut);
+            string iconPath = GetIcon(shortcut, palisadeIdentifier);
 
             return new LnkShortcut(name, iconPath, link.TargetPath);
         }
