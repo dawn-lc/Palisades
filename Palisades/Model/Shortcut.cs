@@ -9,18 +9,28 @@ namespace Palisades.Model
 {
     [XmlInclude(typeof(LnkShortcut))]
     [XmlInclude(typeof(UrlShortcut))]
-    public abstract class Shortcut(string name, string iconPath, string uriOrFileAction)
+    [XmlInclude(typeof(FileShortcut))]
+    [XmlInclude(typeof(FolderShortcut))]
+    public abstract class Shortcut
     {
-        public Shortcut() : this("", "", "")
+        protected Shortcut()
         {
-
         }
 
-        public string Name { get { return name; } set { name = value; } }
+        protected Shortcut(string name, string iconPath, string uriOrFileAction)
+        {
+            Name = name;
+            IconPath = iconPath;
+            UriOrFileAction = uriOrFileAction;
+        }
 
-        public string IconPath { get { return iconPath; } set { iconPath = value; } }
-        public string UriOrFileAction { get { return uriOrFileAction; } set { uriOrFileAction = value; } }
+        public string Name { get; set; } = string.Empty;
 
+        public string Identifier { get; set; } = string.Empty;
+
+        public string IconPath { get; set; } = string.Empty;
+
+        public string UriOrFileAction { get; set; } = string.Empty;
 
         public static string GetName(string filename)
         {
@@ -40,5 +50,10 @@ namespace Palisades.Model
 
             return iconPath;
         }
+
+        /// <summary>
+        /// 抽象的执行操作，比如打开文件、打开链接等
+        /// </summary>
+        public abstract void Execute();
     }
 }

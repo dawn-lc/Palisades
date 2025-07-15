@@ -148,7 +148,17 @@ namespace Palisades.ViewModel
                 PDirectory.EnsureExists(saveDirectory);
 
                 using StreamWriter writer = new(Path.Combine(saveDirectory, "state.xml"));
-                XmlSerializer serializer = new(typeof(PalisadeModel), [typeof(Shortcut), typeof(LnkShortcut), typeof(UrlShortcut)]);
+                XmlSerializer serializer = new(
+                    typeof(PalisadeModel),
+                    [
+                        typeof(Shortcut),
+                        typeof(LnkShortcut),
+                        typeof(UrlShortcut),
+                        typeof(FileShortcut),
+                        typeof(FolderShortcut)
+                    ]
+                );
+
                 serializer.Serialize(writer, this.model);
 
                 shouldSave = false;
@@ -228,19 +238,27 @@ namespace Palisades.ViewModel
 
             foreach (var path in dropped)
             {
-                string? ext = Path.GetExtension(path)?.ToLowerInvariant();
-
-                Shortcut? shortcut = ext switch
+                if (Directory.Exists(path))
                 {
-                    ".lnk" => LnkShortcut.BuildFrom(path, Identifier),
-                    ".url" => UrlShortcut.BuildFrom(path, Identifier),
-                    _ => null
-                };
+                    var folderShortcut = FolderShortcut.BuildFrom(path, Identifier);
+                    Shortcuts.Add(folderShortcut);
+                }
+                else if (File.Exists(path))
+                {
+                    string? ext = Path.GetExtension(path)?.ToLowerInvariant();
+                    Shortcut? shortcut = ext switch
+                    {
+                        ".lnk" => LnkShortcut.BuildFrom(path, Identifier),
+                        ".url" => UrlShortcut.BuildFrom(path, Identifier),
+                        _ => FileShortcut.BuildFrom(path, Identifier)
+                    };
 
-                if (shortcut != null)
-                    Shortcuts.Add(shortcut);
+                    if (shortcut != null)
+                        Shortcuts.Add(shortcut);
+                }
             }
         }
+
 
         public void SelectShortcut(Shortcut shortcut)
             => SelectedShortcut = SelectedShortcut == shortcut ? null : shortcut;
