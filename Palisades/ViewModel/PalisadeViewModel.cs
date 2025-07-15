@@ -1,105 +1,205 @@
-﻿using System;
+﻿using Palisades.Helpers;
+using Palisades.Model;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Xml.Serialization;
-using Palisades.Helpers;
-using Palisades.Model;
 
 namespace Palisades.ViewModel
 {
     public partial class PalisadeViewModel : INotifyPropertyChanged, IDisposable
     {
-        #region Fields
-
+        private bool disposedValue;
         private readonly PalisadeModel model;
-        private readonly CancellationTokenSource cancelToken = new();
-        private readonly Task saveTask;
 
-        private bool shouldSave;
-        private Shortcut? selectedShortcut;
+        public event PropertyChangedEventHandler? PropertyChanged;
+        private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        #endregion
-
-        #region Properties
-
+        private Timer? debounceTimer;
+        public void Save(string? propertyName = null)
+        {
+            debounceTimer?.Stop();
+            debounceTimer?.Dispose();
+            debounceTimer = new Timer(200)
+            {
+                AutoReset = false
+            };
+            debounceTimer.Elapsed += (s, e) =>
+            {
+                model.Save(propertyName);
+                OnPropertyChanged(propertyName);
+            };
+            debounceTimer.Start();
+        }
+        public void Delete()
+        {
+            string saveDirectory = PDirectory.GetPalisadeDirectory(Identifier);
+            Directory.Delete(saveDirectory, true);
+        }
         public string Identifier
         {
             get => model.Identifier;
-            set => SetAndSave(() => model.Identifier, v => model.Identifier = v, value);
+            set
+            {
+                if (model.Identifier != value)
+                {
+                    model.Identifier = value;
+                    Save(nameof(Identifier));
+                }
+            }
+        }
+        public int FenceX
+        {
+            get => model.FenceX;
+            set
+            {
+                if (model.FenceX != value)
+                {
+                    model.FenceX = value;
+                    Save(nameof(FenceX));
+                }
+            }
+        }
+        public int FenceY
+        {
+            get => model.FenceY;
+            set
+            {
+                if (model.FenceY != value)
+                {
+                    model.FenceY = value;
+                    Save(nameof(FenceY));
+                }
+            }
+        }
+        public int Width
+        {
+            get => model.Width;
+            set
+            {
+                if (model.Width != value)
+                {
+                    model.Width = value;
+                    Save(nameof(Width));
+                }
+            }
+        }
+        public int Height
+        {
+            get => model.Height;
+            set
+            {
+                if (model.Height != value)
+                {
+                    model.Height = value;
+                    Save(nameof(Height));
+                }
+            }
+        }
+        public ObservableCollection<Shortcut> Shortcuts
+        {
+            get => model.Shortcuts;
+            set
+            {
+                if (model.Shortcuts != value)
+                {
+                    model.Shortcuts = value;
+                    Save(nameof(Shortcuts));
+                }
+            }
+        }
+
+        private Shortcut? selectedShortcut;
+        public Shortcut? SelectedShortcut
+        {
+            get => selectedShortcut;
+            set
+            {
+                if (selectedShortcut != value)
+                {
+                    selectedShortcut = value;
+                    Save(nameof(SelectedShortcut));
+                }
+            }
         }
 
         public string Name
         {
             get => model.Name;
-            set => SetAndSave(() => model.Name, v => model.Name = v, value);
-        }
-
-        public int FenceX
-        {
-            get => model.FenceX;
-            set => SetAndSave(() => model.FenceX, v => model.FenceX = v, value);
-        }
-
-        public int FenceY
-        {
-            get => model.FenceY;
-            set => SetAndSave(() => model.FenceY, v => model.FenceY = v, value);
-        }
-
-        public int Width
-        {
-            get => model.Width;
-            set => SetAndSave(() => model.Width, v => model.Width = v, value);
-        }
-
-        public int Height
-        {
-            get => model.Height;
-            set => SetAndSave(() => model.Height, v => model.Height = v, value);
+            set
+            {
+                if (model.Name != value)
+                {
+                    model.Name = value;
+                    Save(nameof(Name));
+                }
+            }
         }
 
         public Color HeaderColor
         {
             get => model.HeaderColor;
-            set => SetAndSave(() => model.HeaderColor, v => model.HeaderColor = v, value);
+            set
+            {
+                if (model.HeaderColor != value)
+                {
+                    model.HeaderColor = value;
+                    Save(nameof(HeaderColor));
+                }
+            }
         }
 
         public Color BodyColor
         {
             get => model.BodyColor;
-            set => SetAndSave(() => model.BodyColor, v => model.BodyColor = v, value);
+            set
+            {
+                if (model.BodyColor != value)
+                {
+                    model.BodyColor = value;
+                    Save(nameof(HeaderColor));
+                }
+            }
         }
 
         public SolidColorBrush TitleColor
         {
             get => new(model.TitleColor);
-            set => SetAndSave(() => model.TitleColor, v => model.TitleColor = value.Color, value.Color);
+            set
+            {
+                if (model.TitleColor != value.Color)
+                {
+                    model.TitleColor = value.Color;
+                    Save(nameof(TitleColor));
+                }
+            }
         }
 
         public SolidColorBrush LabelsColor
         {
             get => new(model.LabelsColor);
-            set => SetAndSave(() => model.LabelsColor, v => model.LabelsColor = value.Color, value.Color);
+            set
+            {
+                if (model.LabelsColor != value.Color)
+                {
+                    model.LabelsColor = value.Color;
+                    Save(nameof(LabelsColor));
+                }
+            }
         }
 
-        public ObservableCollection<Shortcut> Shortcuts
-        {
-            get => model.Shortcuts;
-            set => SetAndSave(() => model.Shortcuts, v => model.Shortcuts = v, value);
-        }
-
-        public Shortcut? SelectedShortcut
-        {
-            get => selectedShortcut;
-            set => SetAndSave(() => selectedShortcut, v => selectedShortcut = v, value);
-        }
+        public string EditPageTitleText => Loc.Get("EditTitle");
+        public string NameLabelText => Loc.Get("NameLabel");
+        public string HeaderColorLabelText => Loc.Get("HeaderColorLabel");
+        public string BodyColorLabelText => Loc.Get("BodyColorLabel");
+        public string TitleColorLabelText => Loc.Get("TitleColorLabel");
+        public string LabelsColorLabelText => Loc.Get("LabelsColorLabel");
 
         public string SettingsText => Loc.Get("TraySettings");
         public string AboutText => Loc.Get("AboutTitle");
@@ -107,79 +207,29 @@ namespace Palisades.ViewModel
         public string DeleteFence => Loc.Get("DeleteFence");
         public string NewFence => Loc.Get("NewFence");
 
-        #endregion
-
-        #region Init
-
         public PalisadeViewModel() : this(new PalisadeModel()) { }
 
         public PalisadeViewModel(PalisadeModel model)
         {
             this.model = model;
-
             Shortcuts.CollectionChanged += (_, _) => Save();
-
-            saveTask = Task.Run(SaveLoop, cancelToken.Token);
-
-            Loc.LanguageChanged += (_, _) => RefreshLocalizedProperties();
+            Loc.LanguageChanged += RefreshLocalizedProperties;
         }
-
-        #endregion
-
-        #region Save
-
-        private async Task SaveLoop()
+        private void RefreshLocalizedProperties(object? sender, EventArgs e)
         {
-            while (!cancelToken.Token.IsCancellationRequested)
-            {
-                if (shouldSave)
-                {
-                    SaveNow();
-                }
-                await Task.Delay(1000, cancelToken.Token);
-            }
+            OnPropertyChanged(nameof(SettingsText));
+            OnPropertyChanged(nameof(AboutText));
+            OnPropertyChanged(nameof(EditFence));
+            OnPropertyChanged(nameof(DeleteFence));
+            OnPropertyChanged(nameof(NewFence));
+            OnPropertyChanged(nameof(EditPageTitleText));
+            OnPropertyChanged(nameof(NameLabelText));
+            OnPropertyChanged(nameof(HeaderColorLabelText));
+            OnPropertyChanged(nameof(BodyColorLabelText));
+            OnPropertyChanged(nameof(TitleColorLabelText));
+            OnPropertyChanged(nameof(LabelsColorLabelText));
         }
 
-        private void SaveNow()
-        {
-            try
-            {
-                string saveDirectory = PDirectory.GetPalisadeDirectory(Identifier);
-                PDirectory.EnsureExists(saveDirectory);
-
-                using StreamWriter writer = new(Path.Combine(saveDirectory, "state.xml"));
-                XmlSerializer serializer = new(
-                    typeof(PalisadeModel),
-                    [
-                        typeof(Shortcut),
-                        typeof(LnkShortcut),
-                        typeof(UrlShortcut),
-                        typeof(FileShortcut),
-                        typeof(FolderShortcut)
-                    ]
-                );
-
-                serializer.Serialize(writer, this.model);
-
-                shouldSave = false;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[SaveNow] Error: {ex}");
-            }
-        }
-
-        public void Save() => shouldSave = true;
-
-        public void Delete()
-        {
-            string saveDirectory = PDirectory.GetPalisadeDirectory(Identifier);
-            Directory.Delete(saveDirectory, true);
-        }
-
-        #endregion
-
-        #region Commands
 
         public ICommand NewPalisadeCommand { get; } = new RelayCommand(PalisadesManager.CreatePalisade);
 
@@ -187,7 +237,7 @@ namespace Palisades.ViewModel
 
         public ICommand EditPalisadeCommand { get; } = new RelayCommand<PalisadeViewModel>(vm =>
         {
-            var edit = new View.EditPalisade
+            var edit = new View.Edit
             {
                 DataContext = vm,
                 Owner = PalisadesManager.GetPalisade(vm.Identifier)
@@ -220,9 +270,7 @@ namespace Palisades.ViewModel
 
         public ICommand DelKeyPressed => new RelayCommand(DeleteShortcut);
 
-        #endregion
 
-        #region Shortcuts
 
         public void DropShortcutsHandler(DragEventArgs e)
         {
@@ -271,42 +319,35 @@ namespace Palisades.ViewModel
                 SelectedShortcut = null;
             }
         }
+ 
 
-        #endregion
-
-        #region Helpers
-
-        private void RefreshLocalizedProperties()
+        protected virtual void Dispose(bool disposing)
         {
-            OnPropertyChanged(nameof(SettingsText));
-            OnPropertyChanged(nameof(AboutText));
-            OnPropertyChanged(nameof(EditFence));
-            OnPropertyChanged(nameof(DeleteFence));
-            OnPropertyChanged(nameof(NewFence));
-        }
-
-        private void SetAndSave<T>(Func<T> getter, Action<T> setter, T value, [CallerMemberName] string? propertyName = null)
-        {
-            if (!Equals(getter(), value))
+            if (!disposedValue)
             {
-                setter(value);
-                OnPropertyChanged(propertyName);
-                Save();
+                if (disposing)
+                {
+                    // TODO: 释放托管状态(托管对象)
+                }
+
+                // TODO: 释放未托管的资源(未托管的对象)并重写终结器
+                // TODO: 将大型字段设置为 null
+                disposedValue = true;
             }
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-        private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        // // TODO: 仅当“Dispose(bool disposing)”拥有用于释放未托管资源的代码时才替代终结器
+        // ~PalisadeViewModel()
+        // {
+        //     // 不要更改此代码。请将清理代码放入“Dispose(bool disposing)”方法中
+        //     Dispose(disposing: false);
+        // }
 
         public void Dispose()
         {
-            cancelToken.Cancel();
-            saveTask.Wait();
-            if (shouldSave) SaveNow();
-            cancelToken.Dispose();
+            // 不要更改此代码。请将清理代码放入“Dispose(bool disposing)”方法中
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
-
-        #endregion
     }
 }

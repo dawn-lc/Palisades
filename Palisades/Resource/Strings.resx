@@ -195,4 +195,22 @@
   <data name="AboutCredits" xml:space="preserve">
     <value>About Credits</value>
   </data>
+  <data name="NameLabel" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="HeaderColorLabel" xml:space="preserve">
+    <value>Header Color</value>
+  </data>
+  <data name="BodyColorLabel" xml:space="preserve">
+    <value>Body Color</value>
+  </data>
+  <data name="TitleColorLabel" xml:space="preserve">
+    <value>Title Color</value>
+  </data>
+  <data name="LabelsColorLabel" xml:space="preserve">
+    <value>Labels Color</value>
+  </data>
+  <data name="EditTitle" xml:space="preserve">
+    <value>Edit Fence</value>
+  </data>
 </root>

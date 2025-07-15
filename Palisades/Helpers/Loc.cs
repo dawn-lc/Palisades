@@ -19,7 +19,13 @@ namespace Palisades.Helpers
         {
             try
             {
-                return resourceManager.GetString(key, CultureInfo.CurrentUICulture) ?? key;
+                string? localizedString = resourceManager.GetString(key, CultureInfo.CurrentUICulture) ?? key;
+                if (string.IsNullOrEmpty(localizedString))
+                {
+                    Console.WriteLine($"[Loc] Resource key '{key}' not found in current culture '{CultureInfo.CurrentUICulture.Name}'. Using key as fallback.");
+                    return key;
+                }
+                return localizedString;
             }
             catch (Exception ex)
             {

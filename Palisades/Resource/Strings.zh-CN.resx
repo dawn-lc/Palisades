@@ -195,4 +195,22 @@
   <data name="AboutCredits" xml:space="preserve">
     <value>About Credits</value>
   </data>
+  <data name="NameLabel" xml:space="preserve">
+    <value>名称</value>
+  </data>
+  <data name="HeaderColorLabel" xml:space="preserve">
+    <value>标题背景颜色</value>
+  </data>
+  <data name="BodyColorLabel" xml:space="preserve">
+    <value>主体背景颜色</value>
+  </data>
+  <data name="TitleColorLabel" xml:space="preserve">
+    <value>标题颜色</value>
+  </data>
+  <data name="LabelsColorLabel" xml:space="preserve">
+    <value>标签颜色</value>
+  </data>
+  <data name="EditTitle" xml:space="preserve">
+    <value>编辑Fence</value>
+  </data>
 </root>

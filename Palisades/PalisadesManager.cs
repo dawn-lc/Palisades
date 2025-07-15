@@ -17,64 +17,55 @@ namespace Palisades
             string saveDirectory = PDirectory.GetPalisadesDirectory();
             PDirectory.EnsureExists(saveDirectory);
 
-            List<PalisadeModel> loadedModels = [];
-
             foreach (string identifierDirname in Directory.GetDirectories(saveDirectory))
             {
-                XmlSerializer deserializer = new(typeof(PalisadeModel));
-                using StreamReader reader = new(Path.Combine(saveDirectory, identifierDirname, "state.xml"));
-                if (deserializer.Deserialize(reader) is PalisadeModel model)
+                string modelPath = Path.Combine(identifierDirname, "state.xml");
+                try
                 {
-                    loadedModels.Add(model);
+                    PalisadeModel model;
+                    XmlSerializer deserializer = new(typeof(PalisadeModel));
+                    using StreamReader reader = new(modelPath);
+                    model = deserializer.Deserialize(reader) as PalisadeModel ?? new PalisadeModel();
+                    if (!palisades.ContainsKey(model.Identifier))
+                    {
+                        palisades[model.Identifier] = new Palisade(new PalisadeViewModel(model));
+                    }
                 }
-                reader.Close();
+                catch
+                {
+                    File.Delete(modelPath);
+                    continue;
+                }
             }
-
-            foreach (PalisadeModel loadedModel in loadedModels)
-            {
-                palisades.Add(loadedModel.Identifier, new Palisade(new PalisadeViewModel(loadedModel)));
-            }
-
-        }
-
-        private static void LoadPalisade(PalisadeViewModel initialModel)
-        {
-            Palisade palisade = new(initialModel);
-            palisades.Add(initialModel.Identifier, palisade);
         }
 
         public static void CreatePalisade()
         {
-            PalisadeViewModel viewModel = new();
-            palisades.Add(viewModel.Identifier, new Palisade(viewModel));
+            var viewModel = new PalisadeViewModel();
+            var palisade = new Palisade(viewModel);
+
+            palisades[viewModel.Identifier] = palisade;
             viewModel.Save();
         }
 
         public static void DeletePalisade(string identifier)
         {
-            palisades.TryGetValue(identifier, out Palisade? palisade);
-            if (palisade == null)
-            {
+            if (!palisades.TryGetValue(identifier, out Palisade? palisade) || palisade == null)
                 return;
-            }
-            if (palisade.DataContext != null)
-            {
-                ((PalisadeViewModel)palisade.DataContext).Delete();
-            }
+
+            if (palisade.DataContext is PalisadeViewModel viewModel)
+                viewModel.Delete();
 
             palisade.Close();
             palisades.Remove(identifier);
-
         }
 
         public static Palisade GetPalisade(string identifier)
         {
-            palisades.TryGetValue(identifier, out Palisade? palisade);
-            if (palisade == null)
-            {
-                throw new KeyNotFoundException(identifier);
-            }
-            return palisade;
+            if (palisades.TryGetValue(identifier, out Palisade? palisade) && palisade != null)
+                return palisade;
+
+            throw new KeyNotFoundException($"未找到标识符为 '{identifier}' 的 Palisade。");
         }
     }
 }

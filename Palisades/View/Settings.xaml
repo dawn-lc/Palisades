@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModel="clr-namespace:Palisades.ViewModel"
         mc:Ignorable="d"
-        Title="Settings" Height="400" Width="600"
+        Title="Settings"
+        Height="400" 
+        Width="600"
         WindowStartupLocation="CenterOwner"
         WindowStyle="ToolWindow"
         ResizeMode="NoResize">

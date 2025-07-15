@@ -3,11 +3,11 @@
 namespace Palisades.View
 {
     /// <summary>
-    /// Logique d'interaction pour EditPalisade.xaml
+    /// Logique d'interaction pour Edit.xaml
     /// </summary>
-    public partial class EditPalisade : Window
+    public partial class Edit : Window
     {
-        public EditPalisade()
+        public Edit()
         {
             InitializeComponent();
         }
