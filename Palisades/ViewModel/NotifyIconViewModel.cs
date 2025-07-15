@@ -10,8 +10,8 @@ namespace Palisades.ViewModel
         public ICommand ShowWindowCommand => new RelayCommand(ShowSettings);
         public ICommand ExitApplicationCommand => new RelayCommand(ExitApplication);
 
-        public static string SettingsText => Loc.Get("TraySettings") ?? "设置";
-        public static string ExitText => Loc.Get("TrayExit") ?? "退出";
+        public static string SettingsText => Loc.Get("TraySettings");
+        public static string ExitText => Loc.Get("TrayExit");
 
         public NotifyIconViewModel()
         {

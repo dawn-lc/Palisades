@@ -42,7 +42,10 @@ namespace Palisades.ViewModel
         [
             new() { Name = "GongSolutions.WPF.DragDrop", Url = "https://github.com/punker76/gong-wpf-dragdrop", Description = "Drag & Drop functionality" },
             new() { Name = "Hardcodet.NotifyIcon.Wpf", Url = "https://github.com/hardcodet/wpf-notifyicon", Description = "Windows tray icon support" },
-            new() { Name = "PixiEditor.ColorPicker", Url = "https://github.com/PixiEditor/ColorPicker", Description = "Color picker control" }
+            new() { Name = "PixiEditor.ColorPicker", Url = "https://github.com/PixiEditor/ColorPicker", Description = "Color picker control" },
+            new() { Name = "PixiEditor.ColorPicker.Models", Url = "https://github.com/PixiEditor/ColorPicker", Description = "Color picker models" },
+            new() { Name = "Microsoft.Xaml.Behaviors.Wpf", Url = "https://github.com/microsoft/XamlBehaviorsWpf", Description = "WPF behaviors and triggers" },
+            new() { Name = "Sentry", Url = "https://github.com/getsentry/sentry-dotnet", Description = "Error monitoring and reporting" }
         ];
         #endregion
 

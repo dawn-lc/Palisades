@@ -10,46 +10,140 @@
         xmlns:converters="clr-namespace:Palisades.Converters"
         xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
         xmlns:tb="http://www.hardcodet.net/taskbar"
-        helpers:WindowBlur.IsEnabled="True"
-        helpers:WindowSinker.AlwaysOnBottom="True"
         ShowInTaskbar="False"
         mc:Ignorable="d"
         Title="Palisade"
-        Width="{Binding Width, Mode=TwoWay}"
-        Height="{Binding Height, Mode=TwoWay}"
         AllowsTransparency="True"
         WindowStyle="None"
         ResizeMode="CanResize"
-        Background="Transparent"
+        Width="{Binding Width, Mode=TwoWay}"
+        Height="{Binding Height, Mode=TwoWay}"
         Left="{Binding FenceX, Mode=TwoWay}"
         Top="{Binding FenceY, Mode=TwoWay}"
-        UseLayoutRounding="True">
+        Background="Transparent"
+        helpers:WindowBlur.IsEnabled="True"
+        helpers:WindowSinker.AlwaysOnBottom="True"
+        UseLayoutRounding="True"
+        Foreground="{x:Null}">
+    
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="KeyDown" >
             <i:InvokeCommandAction Command="{Binding DelKeyPressed}" CommandParameter="{Binding}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
+    
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="0" ResizeBorderThickness="5" CornerRadius="20" GlassFrameThickness="0" NonClientFrameEdges="None" UseAeroCaptionButtons="False" />
     </WindowChrome.WindowChrome>
+    
     <Window.DataContext>
         <viewModel:PalisadeViewModel />
     </Window.DataContext>
+    
     <Window.Resources>
         <converters:PathToImageConverter x:Key="PathToImage" />
         <converters:MultiValueEqualityConverter x:Key="MultiValueEqualityConverter" />
         <helpers:BindingProxy x:Key="proxy" Data="{Binding}" />
+        <!-- 全局 ContextMenu 样式 -->
+        <Style TargetType="ContextMenu">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#DDDDDD"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ContextMenu">
+                        <Border 
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="6"
+                        Padding="4">
+                            <Border.Effect>
+                                <DropShadowEffect Color="Black"
+                                              BlurRadius="8"
+                                              ShadowDepth="2"
+                                              Opacity="0.2"/>
+                            </Border.Effect>
+                            <StackPanel IsItemsHost="True"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 全局 MenuItem 样式 -->
+        <Style TargetType="MenuItem">
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Foreground" Value="#333"/>
+            <Setter Property="Padding" Value="10,4"/>
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="MenuItem">
+                        <Border Name="Border"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="4">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="20" />
+                                </Grid.ColumnDefinitions>
+
+                                <!-- 标题 -->
+                                <ContentPresenter Grid.Column="0"
+                                              Margin="10,2"
+                                              ContentSource="Header"
+                                              VerticalAlignment="Center" />
+
+                                <!-- 快捷键 -->
+                                <TextBlock Grid.Column="1"
+                                       Text="{TemplateBinding InputGestureText}"
+                                       Margin="20,0,10,0"
+                                       VerticalAlignment="Center"
+                                       Foreground="#888" />
+
+                                <!-- 子菜单箭头 -->
+                                <Path x:Name="Arrow"
+                                  Grid.Column="2"
+                                  Width="8" Height="8"
+                                  Fill="#666"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"
+                                  Data="M 0 0 L 8 4 L 0 8 Z"
+                                  Visibility="Collapsed"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsHighlighted" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#E6F0FF"/>
+                            </Trigger>
+                            <Trigger Property="IsSubmenuOpen" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#E6F0FF"/>
+                            </Trigger>
+                            <Trigger Property="HasItems" Value="True">
+                                <Setter TargetName="Arrow" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
+    
     <Grid>
         <Border x:Name="LayoutRoot" CornerRadius="20">
             <DockPanel>
                 <Grid DockPanel.Dock="Top" x:Name="Header" MouseLeftButtonDown="Header_MouseLeftButtonDown" IsHitTestVisible="True" Background="#00000000" Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
                     <Grid.ContextMenu>
                         <ContextMenu>
+                            <MenuItem Header="{Binding NewFence}" Command="{Binding Path=Data.NewPalisadeCommand, Source={StaticResource proxy}}" />
+                            <Separator />
                             <MenuItem Header="{Binding EditFence}" Command="{Binding Path=Data.EditPalisadeCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
                             <MenuItem Header="{Binding DeleteFence}" Command="{Binding Path=Data.DeletePalisadeCommand, Source={StaticResource proxy}}" CommandParameter="{Binding Identifier}" />
-                            <Separator />
-                            <MenuItem Header="{Binding NewFence}" Command="{Binding Path=Data.NewPalisadeCommand, Source={StaticResource proxy}}" />
                             <Separator />
                             <MenuItem Header="{Binding SettingsText}" Command="{Binding Path=Data.OpenSettingsCommand, Source={StaticResource proxy}}" />
                             <MenuItem Header="{Binding AboutText}" Command="{Binding Path=Data.OpenAboutCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
@@ -65,7 +159,7 @@
                             <SolidColorBrush Color="{Binding HeaderColor}" />
                         </Rectangle.Fill>
                     </Rectangle>
-                    <Label Grid.Column="1" Content="{Binding Name, Mode=OneWay}" Margin="5" FontSize="32" Foreground="{Binding TitleColor}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <Label Grid.Column="1" Content="{Binding Name, Mode=OneWay}" Margin="2" FontSize="18" Foreground="{Binding TitleColor}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                 </Grid>
                 <Grid x:Name="drag" AllowDrop="True">
                     <i:Interaction.Triggers>
@@ -96,6 +190,15 @@
                                                 <i:InvokeCommandAction Command="{Binding Path=Data.ClickShortcut, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
                                             </i:EventTrigger>
                                         </i:Interaction.Triggers>
+                                        <ContentControl.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem 
+                                                    Header="{Binding Path=Data.DeleteShortcutText, Source={StaticResource proxy}}" 
+                                                    Command="{Binding Path=Data.DeleteShortcutCommand, Source={StaticResource proxy}}" 
+                                                    CommandParameter="{Binding}" 
+                                                />
+                                            </ContextMenu>
+                                        </ContentControl.ContextMenu>
                                         <Border Margin="0,0,0,10" CornerRadius="4" Width="100">
                                             <Border.Style>
                                                 <Style>
@@ -139,4 +242,5 @@
             </DockPanel>
         </Border>
     </Grid>
+    
 </Window>

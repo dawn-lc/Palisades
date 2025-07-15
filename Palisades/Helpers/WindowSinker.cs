@@ -10,6 +10,7 @@ namespace Palisades.Helpers
     internal partial class WindowSinker : IDisposable
     {
         #region Windows API
+
         private const int WM_WINDOWPOSCHANGING = 0x0046;
 
         private const uint SWP_NOSIZE = 0x0001;
@@ -18,9 +19,14 @@ namespace Palisades.Helpers
         private const uint SWP_NOACTIVATE = 0x0010;
 
         private static readonly IntPtr HWND_BOTTOM = new(1);
+
+        [DllImport("user32.dll")]
+        private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy,
+            uint uFlags);
+
         #endregion
 
-        #region Attributs
+        #region Fields
 
         private readonly Window window;
         private bool disposed;
@@ -29,7 +35,7 @@ namespace Palisades.Helpers
 
         internal WindowSinker(Window window)
         {
-            this.window = window;
+            this.window = window ?? throw new ArgumentNullException(nameof(window));
 
             if (window.IsLoaded)
             {
@@ -43,21 +49,35 @@ namespace Palisades.Helpers
             window.Closing += OnWindowClosing;
         }
 
+        #region Dispose Pattern
+
         ~WindowSinker()
         {
             Dispose(false);
         }
 
-        #region Methods
-        protected virtual void Dispose(bool? disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (disposed)
-            {
                 return;
-            }
 
-            window.Loaded -= OnWindowLoaded;
-            window.Closing -= OnWindowClosing;
+            if (disposing)
+            {
+                // 安全解绑 UI 事件
+                if (window.Dispatcher.CheckAccess())
+                {
+                    window.Loaded -= OnWindowLoaded;
+                    window.Closing -= OnWindowClosing;
+                }
+                else
+                {
+                    window.Dispatcher.Invoke(() =>
+                    {
+                        window.Loaded -= OnWindowLoaded;
+                        window.Closing -= OnWindowClosing;
+                    });
+                }
+            }
 
             disposed = true;
         }
@@ -67,17 +87,15 @@ namespace Palisades.Helpers
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
         #endregion
 
         #region Event Handlers
 
-        [DllImport("user32.dll")]
-        private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy,
-            uint uFlags);
-
         private void OnWindowLoaded(object? sender, RoutedEventArgs? e)
         {
-            SetWindowPos(new WindowInteropHelper(window).Handle, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE);
+            SetWindowPos(new WindowInteropHelper(window).Handle, HWND_BOTTOM, 0, 0, 0, 0,
+                SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE);
 
             var source = HwndSource.FromHwnd(new WindowInteropHelper(window).Handle);
             source?.AddHook(WndProc);
@@ -117,9 +135,9 @@ namespace Palisades.Helpers
             typeof(WindowSinker),
             new UIPropertyMetadata(false, OnAlwaysOnBottomChanged));
 
-        public static WindowSinker GetSinker(DependencyObject d)
+        public static WindowSinker? GetSinker(DependencyObject d)
         {
-            return (WindowSinker)d.GetValue(SinkerProperty);
+            return (WindowSinker?)d.GetValue(SinkerProperty);
         }
 
         private static void SetSinker(DependencyObject d, WindowSinker? value)

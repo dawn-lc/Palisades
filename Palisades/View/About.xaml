@@ -23,12 +23,11 @@
             <TextBlock Text="{Binding Version}" Margin="0,5,0,0"/>
             <TextBlock Text="{Binding ReleaseDate}"/>
             <TextBlock Margin="0,20,0,0">
-                <Run Text="{Binding AboutMaintainedBy, Mode=OneWay}"/>
-                <Hyperlink Command="{Binding NavigateCommand}" CommandParameter="https://github.com/Xstoudi">@Xstoudi</Hyperlink>
+                <Hyperlink Command="{Binding NavigateCommand}" CommandParameter="https://github.com/dawn-lc"><Run Text="{Binding AboutMaintainedBy, Mode=OneWay}"/></Hyperlink>
                 <Run Text="{Binding AboutLicenseInfo, Mode=OneWay}"/>
-                <Hyperlink Command="{Binding NavigateCommand}" CommandParameter="https://github.com/Xstoudi/Palisades">
-                    <Run Text="{Binding AboutGithubRepo, Mode=OneWay}"/>
-                </Hyperlink>
+<Hyperlink Command="{Binding NavigateCommand}" CommandParameter="https://github.com/dawn-lc/Palisades">
+  <Run Text="{Binding AboutGithubRepo, Mode=OneWay}"/>
+</Hyperlink>
             </TextBlock>
         </StackPanel>
         <StackPanel Grid.Row="1" Margin="0,20,0,0">

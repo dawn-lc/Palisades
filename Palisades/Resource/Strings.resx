@@ -117,26 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AppTitle" xml:space="preserve">
-    <value>Palisades App</value>
-  </data>
-  <data name="Welcome" xml:space="preserve">
-    <value>Welcome!</value>
-  </data>
   <data name="AboutTitle" xml:space="preserve">
     <value>About Palisades</value>
   </data>
   <data name="AboutMaintainedBy" xml:space="preserve">
-    <value>This software is maintained by </value>
+    <value>dawn-lc</value>
   </data>
   <data name="AboutLicenseInfo" xml:space="preserve">
     <value> and released under MIT licence. You can report issues, check for updates and even contribute on the </value>
   </data>
   <data name="AboutGithubRepo" xml:space="preserve">
-    <value>Github repository.</value>
-  </data>
-  <data name="删除" xml:space="preserve">
-    <value>Credits</value>
+    <value>Palisades (dawn-lc fork)</value>
   </data>
   <data name="AboutLibrariesIntro" xml:space="preserve">
     <value>Palisades uses the following open source libraries to work.</value>
@@ -149,27 +140,6 @@
   </data>
   <data name="TrayExit" xml:space="preserve">
     <value>Exit</value>
-  </data>
-  <data name="bia" xml:space="preserve">
-    <value>About</value>
-  </data>
-  <data name="CheckForUpdates" xml:space="preserve">
-    <value>Check for updates</value>
-  </data>
-  <data name="ReportAnIssue" xml:space="preserve">
-    <value>Report an issue</value>
-  </data>
-  <data name="Contribute" xml:space="preserve">
-    <value>Contribute</value>
-  </data>
-  <data name="License" xml:space="preserve">
-    <value>License</value>
-  </data>
-  <data name="PrivacyPolicy" xml:space="preserve">
-    <value>Privacy Policy</value>
-  </data>
-  <data name="TermsOfService" xml:space="preserve">
-    <value>Terms of Service</value>
   </data>
   <data name="LanguageCode" xml:space="preserve">
     <value>en-US</value>
@@ -212,5 +182,8 @@
   </data>
   <data name="EditTitle" xml:space="preserve">
     <value>Edit Fence</value>
+  </data>
+  <data name="DeleteShortcut" xml:space="preserve">
+    <value>Delete</value>
   </data>
 </root>

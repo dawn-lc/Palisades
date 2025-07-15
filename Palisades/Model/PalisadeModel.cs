@@ -2,14 +2,18 @@
 using Palisades.Helpers;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Windows.Media;
 using System.Xml.Serialization;
 namespace Palisades.Model
 {
     [XmlRoot(Namespace = "io.stouder", ElementName = "PalisadeModel")]
-    public class PalisadeModel
+    public class PalisadeModel : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler? PropertyChanged;
+        private void OnPropertyChanged([CallerMemberName] string? propertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         private string identifier;
         private string name;
         private int fenceX;
@@ -26,35 +30,138 @@ namespace Palisades.Model
         {
             identifier = Guid.NewGuid().ToString();
             name = "Default";
-            headerColor = Color.FromArgb(200, 0, 0, 0);
-            bodyColor = Color.FromArgb(120, 0, 0, 0);
+            headerColor = Color.FromArgb(200, 190, 190, 190);
+            bodyColor = Color.FromArgb(120, 190, 190, 190);
             titleColor = Color.FromArgb(255, 255, 255, 255);
             labelsColor = Color.FromArgb(255, 255, 255, 255);
-            width = 800;
-            height = 450;
+            width = 720;
+            height = 480;
             shortcuts = [];
         }
 
-        public string Identifier { get { return identifier; } set { identifier = value; } }
-        public string Name { get { return name; } set { name = value; } }
+        public string Identifier
+        {
+            get => identifier;
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentException("Identifier cannot be null or whitespace.", nameof(value));
+                }
+                identifier = value;
+                OnPropertyChanged(propertyName: nameof(Identifier));
+            }
+        }
+        public string Name
+        {
+            get => name;
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentException("Name cannot be null or whitespace.", nameof(value));
+                }
+                name = value;
+                OnPropertyChanged(propertyName: nameof(Name));
+            }
+        }
 
-        public int FenceX { get { return fenceX; } set { fenceX = value; } }
-        public int FenceY { get { return fenceY; } set { fenceY = value; } }
+        public int FenceX
+        {
+            get => fenceX;
+            set
+            {
+                fenceX = value;
+                OnPropertyChanged(propertyName: nameof(FenceX));
+            }
+        }
 
-        public int Width { get { return width; } set { width = value; } }
-        public int Height { get { return height; } set { height = value; } }
+        public int FenceY
+        {
+            get => fenceY;
+            set
+            {
+                fenceY = value;
+                OnPropertyChanged(propertyName: nameof(FenceY));
+            }
+        }
 
-        public Color HeaderColor { get { return headerColor; } set { headerColor = value; } }
-        public Color BodyColor { get { return bodyColor; } set { bodyColor = value; } }
-        public Color TitleColor { get { return titleColor; } set { titleColor = value; } }
-        public Color LabelsColor { get { return labelsColor; } set { labelsColor = value; } }
+        public int Width
+        {
+            get => width;
+            set
+            {
+                width = value;
+                OnPropertyChanged(propertyName: nameof(Width));
+            }
+        }
+
+        public int Height
+        {
+            get => height;
+            set
+            {
+                height = value;
+                OnPropertyChanged(propertyName: nameof(Height));
+            }
+        }
+
+        public Color HeaderColor
+        {
+            get => headerColor;
+            set
+            {
+                headerColor = value;
+                OnPropertyChanged(propertyName: nameof(HeaderColor));
+            }
+        }
+
+        public Color BodyColor
+        {
+            get => bodyColor;
+            set
+            {
+                bodyColor = value;
+                OnPropertyChanged(propertyName: nameof(BodyColor));
+            }
+        }
+
+        public Color TitleColor
+        {
+            get => titleColor;
+            set
+            {
+                titleColor = value;
+                OnPropertyChanged(propertyName: nameof(TitleColor));
+            }
+        }
+
+        public Color LabelsColor
+        {
+            get => labelsColor;
+            set
+            {
+                labelsColor = value;
+                OnPropertyChanged(propertyName: nameof(LabelsColor));
+            }
+        }
+
 
         [XmlArray("Shortcuts")]
         [XmlArrayItem(typeof(LnkShortcut))]
         [XmlArrayItem(typeof(UrlShortcut))]
         [XmlArrayItem(typeof(FileShortcut))]
         [XmlArrayItem(typeof(FolderShortcut))]
-        public ObservableCollection<Shortcut> Shortcuts { get { return shortcuts; } set { shortcuts = value; } }
+        public ObservableCollection<Shortcut> Shortcuts 
+        { 
+            get => shortcuts; 
+            set 
+            { 
+                shortcuts = value;
+                OnPropertyChanged(propertyName: nameof(Shortcuts));
+            }
+        }
+
         public void Save(string? propertyName)
         {
             string saveDirectory = PDirectory.GetPalisadeDirectory(Identifier);

@@ -207,6 +207,8 @@ namespace Palisades.ViewModel
         public string DeleteFence => Loc.Get("DeleteFence");
         public string NewFence => Loc.Get("NewFence");
 
+        public string DeleteShortcutText => Loc.Get("DeleteShortcut");
+
         public PalisadeViewModel() : this(new PalisadeModel()) { }
 
         public PalisadeViewModel(PalisadeModel model)
@@ -230,47 +232,83 @@ namespace Palisades.ViewModel
             OnPropertyChanged(nameof(LabelsColorLabelText));
         }
 
-
+        // 命令：新建
         public ICommand NewPalisadeCommand { get; } = new RelayCommand(PalisadesManager.CreatePalisade);
 
+        // 命令：删除
         public ICommand DeletePalisadeCommand { get; } = new RelayCommand<string>(PalisadesManager.DeletePalisade);
 
+        // 命令：编辑
         public ICommand EditPalisadeCommand { get; } = new RelayCommand<PalisadeViewModel>(vm =>
         {
+            var owner = PalisadesManager.GetPalisade(vm.Identifier) ?? Application.Current.MainWindow;
+
             var edit = new View.Edit
             {
-                DataContext = vm,
-                Owner = PalisadesManager.GetPalisade(vm.Identifier)
+                DataContext = vm
             };
+
+            if (owner != null && owner.IsVisible)
+            {
+                edit.Owner = owner;
+            }
+
             edit.ShowDialog();
         });
 
+        // 命令：关于
         public ICommand OpenAboutCommand { get; } = new RelayCommand<PalisadeViewModel>(vm =>
         {
+            var owner = PalisadesManager.GetPalisade(vm.Identifier) ?? Application.Current.MainWindow;
+
             var about = new View.About
             {
-                DataContext = new AboutViewModel(),
-                Owner = PalisadesManager.GetPalisade(vm.Identifier)
+                DataContext = new AboutViewModel()
             };
+
+            if (owner != null && owner.IsVisible)
+            {
+                about.Owner = owner;
+            }
+
             about.ShowDialog();
         });
 
+        // 命令：设置
         public ICommand OpenSettingsCommand { get; } = new RelayCommand(() =>
         {
-            var settingsWindow = new View.Settings
+            var owner = Application.Current.MainWindow;
+
+            var settingsWindow = new View.Settings();
+
+            if (owner != null && owner.IsVisible)
             {
-                Owner = Application.Current.MainWindow
-            };
+                settingsWindow.Owner = owner;
+            }
+
             settingsWindow.ShowDialog();
         });
+        public ICommand DeleteShortcutCommand => new RelayCommand<Shortcut>(DeleteShortcut);
+        public void DeleteShortcut(Shortcut? shortcut)
+        {
+            if (shortcut != null)
+            {
+                Shortcuts.Remove(shortcut);
+                if (SelectedShortcut == shortcut)
+                    SelectedShortcut = null;
+            }
+            else if (SelectedShortcut != null)
+            {
+                Shortcuts.Remove(SelectedShortcut);
+                SelectedShortcut = null;
+            }
+        }
 
         public ICommand DropShortcut => new RelayCommand<DragEventArgs>(DropShortcutsHandler);
 
         public ICommand ClickShortcut => new RelayCommand<Shortcut>(SelectShortcut);
 
         public ICommand DelKeyPressed => new RelayCommand(DeleteShortcut);
-
-
 
         public void DropShortcutsHandler(DragEventArgs e)
         {

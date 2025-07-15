@@ -20,15 +20,15 @@ namespace Palisades.ViewModel
         public string Language => Loc.Get("Language");
         public string CurrentLanguage => Loc.CurrentLanguage;
 
-        private string _selectedLanguage = Loc.CurrentLanguage;
+        private string selectedLanguage = Loc.CurrentLanguage;
         public string SelectedLanguage
         {
-            get => _selectedLanguage;
+            get => selectedLanguage;
             set
             {
-                if (!string.IsNullOrWhiteSpace(value) && _selectedLanguage != value)
+                if (!string.IsNullOrWhiteSpace(value) && selectedLanguage != value)
                 {
-                    _selectedLanguage = value;
+                    selectedLanguage = value;
                     Loc.SetLanguage(value);
                     OnPropertyChanged(nameof(SelectedLanguage));
                     OnPropertyChanged(nameof(CurrentLanguage));

@@ -58,7 +58,7 @@ namespace Palisades
 
             SentrySdk.Init(o =>
             {
-                o.Dsn = "https://ffd9f3db270c4bd583ab3041d6264c38@o1336793.ingest.sentry.io/6605931";
+                o.Dsn = "https://b6cda744e340ad237cf8d10022ee6daf@o687854.ingest.sentry.io/4509671838908416";
                 o.Debug = PEnv.IsDev();
                 o.TracesSampleRate = 1;
             });

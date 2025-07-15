@@ -13,7 +13,6 @@
             <tb:TaskbarIcon
                 x:Key="Taskbar"
                 ContextMenu="{StaticResource SysTrayMenu}"
-                DoubleClickCommand="{Binding ShowWindowCommand}"
                 IconSource="pack://application:,,,/Resource/icon.ico"
                 ToolTipText="Palisades">
                 <tb:TaskbarIcon.DataContext>

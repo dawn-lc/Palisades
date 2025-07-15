@@ -4,6 +4,7 @@ using Palisades.View;
 using Palisades.ViewModel;
 using System.Collections.Generic;
 using System.IO;
+using System.Windows;
 using System.Xml.Serialization;
 
 namespace Palisades
@@ -50,6 +51,13 @@ namespace Palisades
 
         public static void DeletePalisade(string identifier)
         {
+            // 检查是否为最后一个Palisade
+            if (palisades.Count <= 1)
+            {
+                MessageBox.Show("不能删除最后一个Palisade！", "操作被拒绝", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             if (!palisades.TryGetValue(identifier, out Palisade? palisade) || palisade == null)
                 return;
 
