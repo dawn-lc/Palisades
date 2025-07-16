@@ -77,7 +77,6 @@ namespace Palisades.Helpers
                 CultureInfo culture = new(lang);
                 CultureInfo.CurrentCulture = culture;
                 CultureInfo.CurrentUICulture = culture;
-                // 语言切换事件应只在 Loc 内部触发
             }
             catch (CultureNotFoundException ex)
             {

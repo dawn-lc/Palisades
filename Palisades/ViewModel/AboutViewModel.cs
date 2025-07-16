@@ -5,7 +5,10 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Linq;
+using System.Windows;
 using System.Windows.Input;
+using Palisades.View;
 
 namespace Palisades.ViewModel
 {
@@ -24,19 +27,14 @@ namespace Palisades.ViewModel
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        #region Constants
-        private const string NOT_FOUND = "not found";
-        #endregion
 
-        #region Attributs
+        private const string NOT_FOUND = "Not found";
+
         private readonly string version;
-        private readonly string releaseDate;
-        #endregion
-
-        #region Accessors
         public string Version => version;
-        public string ReleaseDate => releaseDate;
 
+        private readonly string releaseDate;
+        public string ReleaseDate => releaseDate;
 
         public List<CreditItem> Credits { get; } =
         [
@@ -47,7 +45,6 @@ namespace Palisades.ViewModel
             new() { Name = "Microsoft.Xaml.Behaviors.Wpf", Url = "https://github.com/microsoft/XamlBehaviorsWpf", Description = "WPF behaviors and triggers" },
             new() { Name = "Sentry", Url = "https://github.com/getsentry/sentry-dotnet", Description = "Error monitoring and reporting" }
         ];
-        #endregion
 
         public AboutViewModel()
         {
@@ -56,24 +53,59 @@ namespace Palisades.ViewModel
             version = maybeVersion != null ? "v" + maybeVersion.Major + "." + maybeVersion.Minor + "." + maybeVersion.Build : NOT_FOUND;
 
             ReleaseDateAttribute? maybeDateAttribute = assembly.GetCustomAttribute<ReleaseDateAttribute>();
-            releaseDate = string.Format(Loc.Get("AboutReleaseDate"), 
+            releaseDate = string.Format(Loc.Get("Palisade.About.ReleaseDate"),
                 maybeDateAttribute != null ? maybeDateAttribute.DateTime.ToShortDateString() : NOT_FOUND);
 
+            Authors = ParseAuthorsFromString(Loc.Get("Palisade.About.Authors"));
             Loc.LanguageChanged += (s, e) => RefreshLocalizedProperties();
         }
 
-        private void RefreshLocalizedProperties()
+        public string About_Title => Loc.Get("Palisade.About.Title");
+        public string About_LicenseInfo => Loc.Get("Palisade.About.LicenseInfo");
+        public string About_Credits => Loc.Get("Palisade.About.Credits");
+        public class AuthorItem
         {
-            OnPropertyChanged(nameof(AboutTitle));
-            OnPropertyChanged(nameof(AboutMaintainedBy));
-            OnPropertyChanged(nameof(AboutLicenseInfo));
-            OnPropertyChanged(nameof(AboutGithubRepo));
-            OnPropertyChanged(nameof(AboutCredits));
-            OnPropertyChanged(nameof(AboutLibrariesIntro));
-            OnPropertyChanged(nameof(ReleaseDate));
+            public string Name { get; set; } = "";
+            public string Url { get; set; } = "";
         }
 
-        #region Commands
+        private List<AuthorItem> ParseAuthorsFromString(string authorsStr)
+        {
+            var authors = new List<AuthorItem>();
+            var entries = authorsStr.Split([','], StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (var entry in entries)
+            {
+                var parts = entry.Split('|');
+                if (parts.Length == 2)
+                {
+                    authors.Add(new AuthorItem
+                    {
+                        Name = parts[0].Trim(),
+                        Url = parts[1].Trim()
+                    });
+                }
+            }
+            return authors;
+        }
+
+        public List<AuthorItem> Authors { get; private set; }
+
+        public string About_HomePage => Loc.Get("Palisade.About.HomePage");
+        public string About_HomePageURL => Loc.Get("Palisade.About.URL");
+        public string About_LibrariesIntro => Loc.Get("Palisade.About.LibrariesIntro");
+        private void RefreshLocalizedProperties()
+        {
+            OnPropertyChanged(nameof(About_Title));
+            OnPropertyChanged(nameof(About_LicenseInfo));
+            OnPropertyChanged(nameof(About_Credits));
+            OnPropertyChanged(nameof(About_HomePage));
+            OnPropertyChanged(nameof(About_LibrariesIntro));
+            OnPropertyChanged(nameof(ReleaseDate));
+            OnPropertyChanged(nameof(Authors));
+        }
+
+
         public ICommand NavigateCommand { get; private set; } = new RelayCommand<string>((url) =>
         {
             Process.Start(new ProcessStartInfo
@@ -82,14 +114,5 @@ namespace Palisades.ViewModel
                 UseShellExecute = true
             });
         });
-        #endregion
-
-        public string AboutTitle => Loc.Get("AboutTitle");
-        public string AboutMaintainedBy => Loc.Get("AboutMaintainedBy");
-        public string AboutLicenseInfo => Loc.Get("AboutLicenseInfo");
-        public string AboutGithubRepo => Loc.Get("AboutGithubRepo");
-        public string AboutCredits => Loc.Get("AboutCredits");
-        public string AboutLibrariesIntro => Loc.Get("AboutLibrariesIntro");
-
     }
 }

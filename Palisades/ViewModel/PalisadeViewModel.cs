@@ -5,111 +5,101 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
-using System.Timers;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using static Palisades.Helpers.Extensions;
 
 namespace Palisades.ViewModel
 {
     public partial class PalisadeViewModel : INotifyPropertyChanged, IDisposable
     {
         private bool disposedValue;
-        private readonly PalisadeModel model;
+
+        public Palisade Config;
 
         public event PropertyChangedEventHandler? PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        private Timer? debounceTimer;
         public void Save(string? propertyName = null)
         {
-            debounceTimer?.Stop();
-            debounceTimer?.Dispose();
-            debounceTimer = new Timer(200)
+            Debounce(200 + Config.Shortcuts.Count * 10, () =>
             {
-                AutoReset = false
-            };
-            debounceTimer.Elapsed += (s, e) =>
-            {
-                model.Save(propertyName);
+                PalisadesManager.SavePalisade(Identifier);
                 OnPropertyChanged(propertyName);
-            };
-            debounceTimer.Start();
-        }
-        public void Delete()
-        {
-            string saveDirectory = PDirectory.GetPalisadeDirectory(Identifier);
-            Directory.Delete(saveDirectory, true);
+                return Task.CompletedTask;
+            });
         }
         public string Identifier
         {
-            get => model.Identifier;
+            get => Config.Identifier;
             set
             {
-                if (model.Identifier != value)
+                if (Config.Identifier != value)
                 {
-                    model.Identifier = value;
+                    Config.Identifier = value;
                     Save(nameof(Identifier));
                 }
             }
         }
         public int FenceX
         {
-            get => model.FenceX;
+            get => Config.FenceX;
             set
             {
-                if (model.FenceX != value)
+                if (Config.FenceX != value)
                 {
-                    model.FenceX = value;
+                    Config.FenceX = value;
                     Save(nameof(FenceX));
                 }
             }
         }
         public int FenceY
         {
-            get => model.FenceY;
+            get => Config.FenceY;
             set
             {
-                if (model.FenceY != value)
+                if (Config.FenceY != value)
                 {
-                    model.FenceY = value;
+                    Config.FenceY = value;
                     Save(nameof(FenceY));
                 }
             }
         }
         public int Width
         {
-            get => model.Width;
+            get => Config.Width;
             set
             {
-                if (model.Width != value)
+                if (Config.Width != value)
                 {
-                    model.Width = value;
+                    Config.Width = value;
                     Save(nameof(Width));
                 }
             }
         }
         public int Height
         {
-            get => model.Height;
+            get => Config.Height;
             set
             {
-                if (model.Height != value)
+                if (Config.Height != value)
                 {
-                    model.Height = value;
+                    Config.Height = value;
                     Save(nameof(Height));
                 }
             }
         }
         public ObservableCollection<Shortcut> Shortcuts
         {
-            get => model.Shortcuts;
+            get => Config.Shortcuts;
             set
             {
-                if (model.Shortcuts != value)
+                if (Config.Shortcuts != value)
                 {
-                    model.Shortcuts = value;
+                    Config.Shortcuts = value;
                     Save(nameof(Shortcuts));
                 }
             }
@@ -131,12 +121,12 @@ namespace Palisades.ViewModel
 
         public string Name
         {
-            get => model.Name;
+            get => Config.Name;
             set
             {
-                if (model.Name != value)
+                if (Config.Name != value)
                 {
-                    model.Name = value;
+                    Config.Name = value;
                     Save(nameof(Name));
                 }
             }
@@ -144,12 +134,12 @@ namespace Palisades.ViewModel
 
         public Color HeaderColor
         {
-            get => model.HeaderColor;
+            get => Config.HeaderColor;
             set
             {
-                if (model.HeaderColor != value)
+                if (Config.HeaderColor != value)
                 {
-                    model.HeaderColor = value;
+                    Config.HeaderColor = value;
                     Save(nameof(HeaderColor));
                 }
             }
@@ -157,25 +147,25 @@ namespace Palisades.ViewModel
 
         public Color BodyColor
         {
-            get => model.BodyColor;
+            get => Config.BodyColor;
             set
             {
-                if (model.BodyColor != value)
+                if (Config.BodyColor != value)
                 {
-                    model.BodyColor = value;
-                    Save(nameof(HeaderColor));
+                    Config.BodyColor = value;
+                    Save(nameof(BodyColor));
                 }
             }
         }
 
         public SolidColorBrush TitleColor
         {
-            get => new(model.TitleColor);
+            get => new(Config.TitleColor);
             set
             {
-                if (model.TitleColor != value.Color)
+                if (Config.TitleColor != value.Color)
                 {
-                    model.TitleColor = value.Color;
+                    Config.TitleColor = value.Color;
                     Save(nameof(TitleColor));
                 }
             }
@@ -183,70 +173,72 @@ namespace Palisades.ViewModel
 
         public SolidColorBrush LabelsColor
         {
-            get => new(model.LabelsColor);
+            get => new(Config.LabelsColor);
             set
             {
-                if (model.LabelsColor != value.Color)
+                if (Config.LabelsColor != value.Color)
                 {
-                    model.LabelsColor = value.Color;
+                    Config.LabelsColor = value.Color;
                     Save(nameof(LabelsColor));
                 }
             }
         }
 
-        public string EditPageTitleText => Loc.Get("EditTitle");
-        public string NameLabelText => Loc.Get("NameLabel");
-        public string HeaderColorLabelText => Loc.Get("HeaderColorLabel");
-        public string BodyColorLabelText => Loc.Get("BodyColorLabel");
-        public string TitleColorLabelText => Loc.Get("TitleColorLabel");
-        public string LabelsColorLabelText => Loc.Get("LabelsColorLabel");
-
-        public string SettingsText => Loc.Get("TraySettings");
-        public string AboutText => Loc.Get("AboutTitle");
-        public string EditFence => Loc.Get("EditFence");
-        public string DeleteFence => Loc.Get("DeleteFence");
-        public string NewFence => Loc.Get("NewFence");
-
-        public string DeleteShortcutText => Loc.Get("DeleteShortcut");
-
-        public PalisadeViewModel() : this(new PalisadeModel()) { }
-
-        public PalisadeViewModel(PalisadeModel model)
+        public PalisadeViewModel()
         {
-            this.model = model;
-            Shortcuts.CollectionChanged += (_, _) => Save();
-            Loc.LanguageChanged += RefreshLocalizedProperties;
+            Config = PalisadesManager.defaultConfig;
+            return;
         }
+        public PalisadeViewModel(Palisade config)
+        {
+            Config = config;
+            Loc.LanguageChanged += RefreshLocalizedProperties;
+            Config.PropertyChanged += (s, e) => OnPropertyChanged(e.PropertyName);
+            Shortcuts.CollectionChanged += (s, e) => Save(nameof(Shortcuts));
+        }
+        public string Edit_Title => Loc.Get("Palisade.Edit.Title");
+        public string Edit_NameLabel => Loc.Get("Palisade.Edit.NameLabel");
+        public string Edit_HeaderColorLabel => Loc.Get("Palisade.Edit.HeaderColorLabel");
+        public string Edit_BodyColorLabel => Loc.Get("Palisade.Edit.BodyColorLabel");
+        public string Edit_TitleColorLabel => Loc.Get("Palisade.Edit.TitleColorLabel");
+        public string Edit_LabelsColorLabel => Loc.Get("Palisade.Edit.LabelsColorLabel");
+        public string ContextMenu_Settings => Loc.Get("Palisade.ContextMenu.Settings");
+        public string ContextMenu_About => Loc.Get("Palisade.ContextMenu.About");
+        public string ContextMenu_Edit => Loc.Get("Palisade.ContextMenu.Edit");
+        public string ContextMenu_Delete => Loc.Get("Palisade.ContextMenu.Delete");
+        public string ContextMenu_New => Loc.Get("Palisade.ContextMenu.New");
+        public string Shortcut_ContextMenu_Delete => Loc.Get("Palisade.Shortcut.ContextMenu.Delete");
         private void RefreshLocalizedProperties(object? sender, EventArgs e)
         {
-            OnPropertyChanged(nameof(SettingsText));
-            OnPropertyChanged(nameof(AboutText));
-            OnPropertyChanged(nameof(EditFence));
-            OnPropertyChanged(nameof(DeleteFence));
-            OnPropertyChanged(nameof(NewFence));
-            OnPropertyChanged(nameof(EditPageTitleText));
-            OnPropertyChanged(nameof(NameLabelText));
-            OnPropertyChanged(nameof(HeaderColorLabelText));
-            OnPropertyChanged(nameof(BodyColorLabelText));
-            OnPropertyChanged(nameof(TitleColorLabelText));
-            OnPropertyChanged(nameof(LabelsColorLabelText));
+            OnPropertyChanged(nameof(Edit_Title));
+            OnPropertyChanged(nameof(Edit_NameLabel));
+            OnPropertyChanged(nameof(Edit_HeaderColorLabel));
+            OnPropertyChanged(nameof(Edit_BodyColorLabel));
+            OnPropertyChanged(nameof(Edit_TitleColorLabel));
+            OnPropertyChanged(nameof(Edit_LabelsColorLabel));
+            OnPropertyChanged(nameof(ContextMenu_Settings));
+            OnPropertyChanged(nameof(ContextMenu_About));
+            OnPropertyChanged(nameof(ContextMenu_Edit));
+            OnPropertyChanged(nameof(ContextMenu_Delete));
+            OnPropertyChanged(nameof(ContextMenu_New));
+            OnPropertyChanged(nameof(Shortcut_ContextMenu_Delete));
         }
 
         // 命令：新建
-        public ICommand NewPalisadeCommand { get; } = new RelayCommand(PalisadesManager.CreatePalisade);
+        public ICommand NewPalisadeCommand { get; } = new RelayCommand(() =>
+        {
+            PalisadesManager.CreatePalisade();
+        });
 
         // 命令：删除
         public ICommand DeletePalisadeCommand { get; } = new RelayCommand<string>(PalisadesManager.DeletePalisade);
 
         // 命令：编辑
-        public ICommand EditPalisadeCommand { get; } = new RelayCommand<PalisadeViewModel>(vm =>
+        public ICommand EditPalisadeCommand { get; } = new RelayCommand<PalisadeViewModel>(viewModel =>
         {
-            var owner = PalisadesManager.GetPalisade(vm.Identifier) ?? Application.Current.MainWindow;
-
-            var edit = new View.Edit
-            {
-                DataContext = vm
-            };
+            var owner = PalisadesManager.GetPalisade(viewModel.Identifier) ?? Application.Current.MainWindow;
+            
+            var edit = new View.Edit(viewModel);
 
             if (owner != null && owner.IsVisible)
             {
@@ -257,9 +249,9 @@ namespace Palisades.ViewModel
         });
 
         // 命令：关于
-        public ICommand OpenAboutCommand { get; } = new RelayCommand<PalisadeViewModel>(vm =>
+        public ICommand OpenAboutCommand { get; } = new RelayCommand<PalisadeViewModel>(viewModel =>
         {
-            var owner = PalisadesManager.GetPalisade(vm.Identifier) ?? Application.Current.MainWindow;
+            var owner = PalisadesManager.GetPalisade(viewModel.Identifier) ?? Application.Current.MainWindow;
 
             var about = new View.About
             {

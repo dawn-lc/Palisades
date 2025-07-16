@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-
 namespace Palisades.ViewModel
 {
     public class SettingsViewModel : INotifyPropertyChanged
@@ -16,8 +15,8 @@ namespace Palisades.ViewModel
 
         public IEnumerable<LanguageItem> AvailableLanguages => Loc.AvailableLanguages.Select(l => new LanguageItem { Code = l.code, Name = l.name });
 
-        public string SettingsPage => Loc.Get("SettingsPage");
-        public string Language => Loc.Get("Language");
+        public string Settings_Title => Loc.Get("Palisade.Settings.Title");
+        public string Settings_Language => Loc.Get("Palisade.Settings.Language");
         public string CurrentLanguage => Loc.CurrentLanguage;
 
         private string selectedLanguage = Loc.CurrentLanguage;
@@ -30,7 +29,7 @@ namespace Palisades.ViewModel
                 {
                     selectedLanguage = value;
                     Loc.SetLanguage(value);
-                    OnPropertyChanged(nameof(SelectedLanguage));
+                    OnPropertyChanged(nameof(Settings_Language));
                     OnPropertyChanged(nameof(CurrentLanguage));
                 }
             }
@@ -50,8 +49,8 @@ namespace Palisades.ViewModel
 
         private void RefreshLocalizedProperties(object? sender, EventArgs e)
         {
-            OnPropertyChanged(nameof(SettingsPage));
-            OnPropertyChanged(nameof(Language));
+            OnPropertyChanged(nameof(Settings_Title));
+            OnPropertyChanged(nameof(Settings_Language));
             OnPropertyChanged(nameof(AvailableLanguages));
             OnPropertyChanged(nameof(CurrentLanguage));
             OnPropertyChanged(nameof(SelectedLanguage));

@@ -7,10 +7,11 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows.Media;
 using System.Xml.Serialization;
+
 namespace Palisades.Model
 {
-    [XmlRoot(Namespace = "io.stouder", ElementName = "PalisadeModel")]
-    public class PalisadeModel : INotifyPropertyChanged
+    [XmlRoot(Namespace = "io.stouder", ElementName = "Palisade")]
+    public class Palisade : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string? propertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -20,18 +21,18 @@ namespace Palisades.Model
         private int fenceY;
         private int width;
         private int height;
-        private ObservableCollection<Shortcut> shortcuts;
         private Color headerColor;
         private Color bodyColor;
         private Color titleColor;
         private Color labelsColor;
 
-        public PalisadeModel()
+        private ObservableCollection<Shortcut> shortcuts;
+        public Palisade()
         {
             identifier = Guid.NewGuid().ToString();
             name = "Default";
-            headerColor = Color.FromArgb(200, 190, 190, 190);
-            bodyColor = Color.FromArgb(120, 190, 190, 190);
+            headerColor = Color.FromArgb(200, 0, 0, 0);
+            bodyColor = Color.FromArgb(120, 0, 0, 0);
             titleColor = Color.FromArgb(255, 255, 255, 255);
             labelsColor = Color.FromArgb(255, 255, 255, 255);
             width = 720;
@@ -160,26 +161,6 @@ namespace Palisades.Model
                 shortcuts = value;
                 OnPropertyChanged(propertyName: nameof(Shortcuts));
             }
-        }
-
-        public void Save(string? propertyName)
-        {
-            string saveDirectory = PDirectory.GetPalisadeDirectory(Identifier);
-            PDirectory.EnsureExists(saveDirectory);
-
-            using StreamWriter writer = new(Path.Combine(saveDirectory, "state.xml"));
-            XmlSerializer serializer = new(
-                typeof(PalisadeModel),
-                [
-                    typeof(Shortcut),
-                    typeof(LnkShortcut),
-                    typeof(UrlShortcut),
-                    typeof(FileShortcut),
-                    typeof(FolderShortcut)
-                ]
-            );
-
-            serializer.Serialize(writer, this);
         }
     }
 }

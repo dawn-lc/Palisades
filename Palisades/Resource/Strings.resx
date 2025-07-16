@@ -117,73 +117,104 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AboutTitle" xml:space="preserve">
-    <value>About Palisades</value>
+  <data name="Palisade.ContextMenu.About" xml:space="preserve">
+    <value>About</value>
+    <comment>Palisade ContextMenu About</comment>
   </data>
-  <data name="AboutMaintainedBy" xml:space="preserve">
-    <value>dawn-lc</value>
+  <data name="Palisade.ContextMenu.Delete" xml:space="preserve">
+    <value>Delete</value>
+    <comment>Palisade ContextMenu Delete</comment>
   </data>
-  <data name="AboutLicenseInfo" xml:space="preserve">
-    <value> and released under MIT licence. You can report issues, check for updates and even contribute on the </value>
-  </data>
-  <data name="AboutGithubRepo" xml:space="preserve">
-    <value>Palisades (dawn-lc fork)</value>
-  </data>
-  <data name="AboutLibrariesIntro" xml:space="preserve">
-    <value>Palisades uses the following open source libraries to work.</value>
-  </data>
-  <data name="AboutReleaseDate" xml:space="preserve">
-    <value>released {0}</value>
-  </data>
-  <data name="TraySettings" xml:space="preserve">
-    <value>Settings</value>
-  </data>
-  <data name="TrayExit" xml:space="preserve">
-    <value>Exit</value>
-  </data>
-  <data name="LanguageCode" xml:space="preserve">
-    <value>en-US</value>
-  </data>
-  <data name="LanguageName" xml:space="preserve">
-    <value>English</value>
-  </data>
-  <data name="SettingsPage" xml:space="preserve">
-    <value>Settings Page</value>
-  </data>
-  <data name="Language" xml:space="preserve">
-    <value>Language</value>
-  </data>
-  <data name="EditFence" xml:space="preserve">
+  <data name="Palisade.ContextMenu.Edit" xml:space="preserve">
     <value>Edit</value>
+    <comment>Palisade ContextMenu Edit</comment>
   </data>
-  <data name="DeleteFence" xml:space="preserve">
-    <value>Delete</value>
+  <data name="Palisade.ContextMenu.New" xml:space="preserve">
+    <value>New</value>
+    <comment>Palisade ContextMenu New</comment>
   </data>
-  <data name="NewFence" xml:space="preserve">
-    <value>New Fence</value>
+  <data name="Palisade.ContextMenu.Settings" xml:space="preserve">
+    <value>Settings</value>
+    <comment>Palisade ContextMenu Settings</comment>
   </data>
-  <data name="AboutCredits" xml:space="preserve">
-    <value>About Credits</value>
+  <data name="Palisade.Edit.BodyColorLabel" xml:space="preserve">
+    <value>BodyColor</value>
+    <comment>Palisade Edit BodyColorLabel</comment>
   </data>
-  <data name="NameLabel" xml:space="preserve">
+  <data name="Palisade.Edit.HeaderColorLabel" xml:space="preserve">
+    <value>HeaderColor</value>
+    <comment>Palisade Edit HeaderColorLabel</comment>
+  </data>
+  <data name="Palisade.Edit.LabelsColorLabel" xml:space="preserve">
+    <value>LabelsColor</value>
+    <comment>Palisade Edit LabelsColorLabel</comment>
+  </data>
+  <data name="Palisade.Edit.NameLabel" xml:space="preserve">
     <value>Name</value>
+    <comment>Palisade Edit NameLabel</comment>
   </data>
-  <data name="HeaderColorLabel" xml:space="preserve">
-    <value>Header Color</value>
+  <data name="Palisade.Edit.Title" xml:space="preserve">
+    <value>Edit</value>
+    <comment>Palisade Edit Title</comment>
   </data>
-  <data name="BodyColorLabel" xml:space="preserve">
-    <value>Body Color</value>
+  <data name="Palisade.Edit.TitleColorLabel" xml:space="preserve">
+    <value>TitleColor</value>
+    <comment>Palisade Edit TitleColorLabel</comment>
   </data>
-  <data name="TitleColorLabel" xml:space="preserve">
-    <value>Title Color</value>
-  </data>
-  <data name="LabelsColorLabel" xml:space="preserve">
-    <value>Labels Color</value>
-  </data>
-  <data name="EditTitle" xml:space="preserve">
-    <value>Edit Fence</value>
-  </data>
-  <data name="DeleteShortcut" xml:space="preserve">
+  <data name="Palisade.Shortcut.ContextMenu.Delete" xml:space="preserve">
     <value>Delete</value>
+    <comment>Palisade Shortcut ContextMenu Delete</comment>
+  </data>
+  <data name="Palisade.About.Authors" xml:space="preserve">
+    <value>dawn-lc|https://github.com/dawn-lc</value>
+    <comment>About dialog authors list (format: Name|URL,Name|URL)</comment>
+  </data>
+  <data name="Palisade.About.Title" xml:space="preserve">
+    <value>About Palisades</value>
+    <comment>About dialog title</comment>
+  </data>
+  <data name="Palisade.About.LicenseInfo" xml:space="preserve">
+    <value>MIT License</value>
+    <comment>About dialog license info</comment>
+  </data>
+  <data name="Palisade.About.Credits" xml:space="preserve">
+    <value>Credits</value>
+    <comment>About dialog credits section title</comment>
+  </data>
+  <data name="Palisade.About.HomePage" xml:space="preserve">
+    <value>Home Page</value>
+    <comment>About dialog home page link text</comment>
+  </data>
+  <data name="Palisade.About.HomePageURL" xml:space="preserve">
+    <value>https://github.com/dawn-lc/Palisades</value>
+    <comment>About dialog home page URL</comment>
+  </data>
+  <data name="Palisade.About.LibrariesIntro" xml:space="preserve">
+    <value>This software uses the following libraries:</value>
+    <comment>About dialog libraries introduction</comment>
+  </data>
+  <data name="Palisade.About.ReleaseDate" xml:space="preserve">
+    <value>Released on: {0}</value>
+    <comment>About dialog release date format</comment>
+  </data>
+  <data name="Palisade.Settings.Title" xml:space="preserve">
+    <value>Settings</value>
+    <comment>Palisade Settings Title</comment>
+  </data>
+  <data name="Palisade.Settings.Language" xml:space="preserve">
+    <value>Language</value>
+    <comment>Palisade Settings Language</comment>
+  </data>
+  <data name="Palisade.Global.Close" xml:space="preserve">
+    <value>Close</value>
+    <comment>Palisade Global Close</comment>
+  </data>
+  <data name="Palisade.NotifyIcon.Settings" xml:space="preserve">
+    <value>Settings</value>
+    <comment>Palisade NotifyIcon Settings</comment>
+  </data>
+  <data name="Palisade.NotifyIcon.Exit" xml:space="preserve">
+    <value>Exit</value>
+    <comment>Palisade NotifyIcon Exit</comment>
   </data>
 </root>

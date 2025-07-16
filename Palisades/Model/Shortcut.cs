@@ -40,9 +40,7 @@ namespace Palisades.Model
         public static string GetIcon(string filename, string palisadeIdentifier)
         {
             using Bitmap? icon = IconExtractor.GetFileImageFromPath(filename, Helpers.Native.IconSizeEnum.LargeIcon48) ?? throw new InvalidOperationException("Could not extract icon from file: " + filename);
-            string iconDir = PDirectory.GetPalisadeIconsDirectory(palisadeIdentifier);
-            PDirectory.EnsureExists(iconDir);
-
+            string iconDir = Path.Combine(PalisadesManager.PalisadesPath, palisadeIdentifier);
             string iconFilename = Guid.NewGuid().ToString() + ".png";
             string iconPath = Path.Combine(iconDir, iconFilename);
             using FileStream fileStream = new(iconPath, FileMode.Create);

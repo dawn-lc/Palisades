@@ -117,73 +117,79 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AboutTitle" xml:space="preserve">
-    <value>关于 Palisades</value>
+  <data name="Palisade.ContextMenu.About" xml:space="preserve">
+    <value>关于</value>
   </data>
-  <data name="AboutMaintainedBy" xml:space="preserve">
-    <value>dawn-lc</value>
+  <data name="Palisade.ContextMenu.Delete" xml:space="preserve">
+    <value>删除</value>
   </data>
-  <data name="AboutLicenseInfo" xml:space="preserve">
-    <value>维护，基于 MIT 许可证发布。源代码位于</value>
-  </data>
-  <data name="AboutGithubRepo" xml:space="preserve">
-    <value>Palisades (dawn-lc fork)</value>
-  </data>
-  <data name="AboutLibrariesIntro" xml:space="preserve">
-    <value>Palisades 使用了以下开源库：</value>
-  </data>
-  <data name="AboutReleaseDate" xml:space="preserve">
-    <value>发布于 {0}</value>
-  </data>
-  <data name="TraySettings" xml:space="preserve">
-    <value>设置</value>
-  </data>
-  <data name="TrayExit" xml:space="preserve">
-    <value>退出</value>
-  </data>
-  <data name="LanguageCode" xml:space="preserve">
-    <value>zh-CN</value>
-  </data>
-  <data name="LanguageName" xml:space="preserve">
-    <value>简体中文</value>
-  </data>
-  <data name="SettingsPage" xml:space="preserve">
-    <value>设置页</value>
-  </data>
-  <data name="Language" xml:space="preserve">
-    <value>语言</value>
-  </data>
-  <data name="EditFence" xml:space="preserve">
+  <data name="Palisade.ContextMenu.Edit" xml:space="preserve">
     <value>编辑</value>
   </data>
-  <data name="DeleteFence" xml:space="preserve">
-    <value>删除</value>
-  </data>
-  <data name="NewFence" xml:space="preserve">
+  <data name="Palisade.ContextMenu.New" xml:space="preserve">
     <value>新建</value>
   </data>
-  <data name="AboutCredits" xml:space="preserve">
-    <value>致谢</value>
+  <data name="Palisade.ContextMenu.Settings" xml:space="preserve">
+    <value>设置</value>
   </data>
-  <data name="NameLabel" xml:space="preserve">
-    <value>名称</value>
+  <data name="Palisade.Edit.BodyColorLabel" xml:space="preserve">
+    <value>背景色</value>
   </data>
-  <data name="HeaderColorLabel" xml:space="preserve">
-    <value>标题背景颜色</value>
+  <data name="Palisade.Edit.HeaderColorLabel" xml:space="preserve">
+    <value>标题背景色</value>
   </data>
-  <data name="BodyColorLabel" xml:space="preserve">
-    <value>主体背景颜色</value>
-  </data>
-  <data name="TitleColorLabel" xml:space="preserve">
-    <value>标题颜色</value>
-  </data>
-  <data name="LabelsColorLabel" xml:space="preserve">
+  <data name="Palisade.Edit.LabelsColorLabel" xml:space="preserve">
     <value>标签颜色</value>
   </data>
-  <data name="EditTitle" xml:space="preserve">
-    <value>编辑围栏</value>
+  <data name="Palisade.Edit.NameLabel" xml:space="preserve">
+    <value>标题</value>
   </data>
-  <data name="DeleteShortcut" xml:space="preserve">
+  <data name="Palisade.Edit.Title" xml:space="preserve">
+    <value>编辑</value>
+  </data>
+  <data name="Palisade.Edit.TitleColorLabel" xml:space="preserve">
+    <value>标题颜色</value>
+  </data>
+  <data name="Palisade.Shortcut.ContextMenu.Delete" xml:space="preserve">
     <value>删除</value>
+  </data>
+  <data name="Palisade.About.Authors" xml:space="preserve">
+    <value>dawn-lc|https://github.com/dawn-lc</value>
+  </data>
+  <data name="Palisade.About.Title" xml:space="preserve">
+    <value>关于 Palisades</value>
+  </data>
+  <data name="Palisade.About.LicenseInfo" xml:space="preserve">
+    <value>MIT License</value>
+  </data>
+  <data name="Palisade.About.Credits" xml:space="preserve">
+    <value>致谢</value>
+  </data>
+  <data name="Palisade.About.HomePage" xml:space="preserve">
+    <value>项目主页</value>
+  </data>
+  <data name="Palisade.About.HomePageURL" xml:space="preserve">
+    <value>https://github.com/dawn-lc/Palisades</value>
+  </data>
+  <data name="Palisade.About.LibrariesIntro" xml:space="preserve">
+    <value>本软件使用了以下开源库:</value>
+  </data>
+  <data name="Palisade.About.ReleaseDate" xml:space="preserve">
+    <value>发布于: {0}</value>
+  </data>
+  <data name="Palisade.Settings.Title" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="Palisade.Settings.Language" xml:space="preserve">
+    <value>语言</value>
+  </data>
+  <data name="Palisade.Global.Close" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="Palisade.NotifyIcon.Settings" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="Palisade.NotifyIcon.Exit" xml:space="preserve">
+    <value>退出</value>
   </data>
 </root>

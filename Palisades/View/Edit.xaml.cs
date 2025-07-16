@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using Palisades.ViewModel;
+using System.Windows;
+using System.Windows.Input;
 
 namespace Palisades.View
 {
@@ -7,9 +9,21 @@ namespace Palisades.View
     /// </summary>
     public partial class Edit : Window
     {
-        public Edit()
+        public Edit(PalisadeViewModel viewModel)
         {
+            DataContext = viewModel;
             InitializeComponent();
+        }
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+        private void DragMove(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                DragMove();
+            }
         }
     }
 }

@@ -7,18 +7,23 @@ namespace Palisades.ViewModel
 {
     public class NotifyIconViewModel : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void OnPropertyChanged(string? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
         public ICommand ShowWindowCommand => new RelayCommand(ShowSettings);
         public ICommand ExitApplicationCommand => new RelayCommand(ExitApplication);
 
-        public static string SettingsText => Loc.Get("TraySettings");
-        public static string ExitText => Loc.Get("TrayExit");
+        public string NotifyIcon_Settings => Loc.Get("Palisade.NotifyIcon.Settings");
+        public string NotifyIcon_Exit => Loc.Get("Palisade.NotifyIcon.Exit");
 
         public NotifyIconViewModel()
         {
             Loc.LanguageChanged += (s, e) =>
             {
-                OnPropertyChanged(nameof(SettingsText));
-                OnPropertyChanged(nameof(ExitText));
+                OnPropertyChanged(nameof(NotifyIcon_Settings));
+                OnPropertyChanged(nameof(NotifyIcon_Exit));
             };
         }
 
@@ -44,12 +49,6 @@ namespace Palisades.ViewModel
             }
             // 关闭应用程序
             Application.Current.Shutdown();
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected void OnPropertyChanged(string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

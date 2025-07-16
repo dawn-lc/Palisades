@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Threading;
 using Palisades.Helpers;
 using Sentry;
+using System.Diagnostics;
 
 namespace Palisades
 {
@@ -19,10 +20,6 @@ namespace Palisades
             SetupSentry();
 
             PalisadesManager.LoadPalisades();
-            if (PalisadesManager.palisades.Count == 0)
-            {
-                PalisadesManager.CreatePalisade();
-            }
 
             Exit += App_Exit;
         }
@@ -59,7 +56,7 @@ namespace Palisades
             SentrySdk.Init(o =>
             {
                 o.Dsn = "https://b6cda744e340ad237cf8d10022ee6daf@o687854.ingest.sentry.io/4509671838908416";
-                o.Debug = PEnv.IsDev();
+                o.Debug = Debugger.IsAttached;
                 o.TracesSampleRate = 1;
             });
         }
